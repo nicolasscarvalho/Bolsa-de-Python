@@ -6,6 +6,11 @@ def dormir(dia_semana, feriado):
     retorne True ou False conforme você vá dormir ou não
     """
 
+    if (feriado and not dia_semana):
+        return True
+    else:
+        return False
+
 def alunos_problema(a_sorri, b_sorri):
     """
     temos dois alunos a e b

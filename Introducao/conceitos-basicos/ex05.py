@@ -13,6 +13,27 @@ def comprar_frutas(morango=0, uva=0):
     pago pelo cliente.
     '''
 
+    preco = 0
+
+    if morango <= 5:
+        preco += morango * 2.5
+    else:
+        preco += morango * 2.2
+
+    
+    if uva <= 5:
+        preco += uva * 1.8
+    else:
+        preco += uva * 1.5
+
+
+    if morango + uva > 8 or preco > 25:
+        return round((preco - (10/100 * preco)), 2)
+    else:
+        return round(preco, 2)
+    
+    
+        
 
 # Área de testes: só mexa aqui se souber o que está fazendo!
 acertos = 0

@@ -1,19 +1,51 @@
 def palindrome(texto):
-    '''Faça uma função que verifique se uma textro passado é palíndrome,
+    '''Faça uma função que verifique se uma texto passado é palíndrome,
     isto é, se é igual quando lido de trás pra frente.'''
+
+    acentos = '?!,.;'
+    for acento in acentos:
+        texto = texto.replace(acento, '')
+
+    texto = ''.join(texto.lower().strip(' ').split(' '))
+    
+    if texto[0::] == texto[::-1]:
+        return True
+    else:
+        return False
 
 def troca_caixa(texto):
     '''Vogais ficam em caixa alta (maiúsculas)
     Consoantes ficam em caixa baixa (minúsculas)'''
+
+    vogais = 'aeiou'
+    nova_str = ''
+
+    for letra in texto:
+        if letra in vogais:
+            nova_str += letra.capitalize()
+        else:
+            nova_str += letra.lower()
+
+    return nova_str
 
 def imprime_mes_por_extenso(data):
     '''Faça um programa que solicite a data de nascimento (dd/mm/aaaa) 
     e imprima com o nome do mês por extenso
     '''
 
+    meses = {'1':'janeiro'  ,'2':'fevereiro',  '3':'março',  '4':'abril',  '5':'maio',  '6':'junho',  '7':'julho',  '8':'agosto',  '9':'setembro',  '10':'outubro',  '11':'novembro',  '12':'dezembro'}
+    data_quebrada = data.split('/')
+
+    if len(data_quebrada) == 3:
+        return f'{data_quebrada[0]} de {meses[str( data[1]) ]} de {data_quebrada[2]}'
+
 def encontra_caracter(texto, caracter):
     '''Receba um texto e retorne a localização da primeira vez que 
     aparece o caracter especificado'''
+    try:
+        return texto.index(caracter)
+    except:
+        return None
 
 def numeros_sortudos(limite_inferior=1, limite_superior=100000):
     ''' Daniela é uma pessoa muito supersticiosa. Para ela, um número é 
@@ -24,6 +56,20 @@ def numeros_sortudos(limite_inferior=1, limite_superior=100000):
     Dica: faça uma função de validação e outra que a chama e 
     verifica o intervalo dado
     '''
+
+    def valida_num(num):
+        if '2' in str(num) and '7' not in str(num):
+            return True
+        else:
+            return False
+
+    cont = 0
+
+    for num in range(limite_inferior, limite_superior + 1):
+        if valida_num(num):
+            cont += 1
+
+    return cont
 
 def ponteironuloville(telefones):
     '''Na pacata vila campestre de Ponteironuloville, todos os telefones 
@@ -66,6 +112,8 @@ def ponteironuloville(telefones):
         551595 575447 587393 600953 615233 633673 659902 678315
         Resposta: 39 
     '''
+
+    
 
 # Área de testes: só mexa aqui se souber o que está fazendo!
 acertos = 0
