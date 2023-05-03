@@ -2,6 +2,14 @@ def media_anual(temperaturas):
     '''Receba uma lista com as temperaturas médias de cada mês
     e devolva uma lista com os números correspondentes aos meses que 
     possuem temperatura superior á média anual.'''
+    temperatura_media = sum(temperaturas)/len(temperaturas)
+    picos_temperatura = []
+
+    for mes, temperatura in enumerate(temperaturas):
+        if temperatura > temperatura_media:
+            picos_temperatura.append(mes)
+
+    return picos_temperatura
 
 def maiores_13(idades,alturas):
     '''Esta função recebe as idades e alturas de diversas pessoas, em duas
@@ -9,9 +17,19 @@ def maiores_13(idades,alturas):
     Calcule a media das alturas e retorne as alturas daqueles que possuem 
     'idades' maior que 13 e altura inferior a media da turma'''
 
+    media_altura = sum(alturas)/len(alturas)
+    alturas_superiores = []
+
+    for indice, idade in enumerate(idades):
+        if idade > 13 and alturas[indice] < media_altura:
+            alturas_superiores.append(alturas[indice])
+
+    return alturas_superiores
+
 def media_saltos_lista(saltos):
     '''Receba uma lista com os saltos de um atleta e calcule a média dos 
     seus saltos, sabendo que o melhor e o pior saltos são desconsiderados.'''
+    return round(sum(saltos)/len(saltos), 1)
 
 def lista_de_primos(inicio,fim):
     '''Retorne uma lista de primos entre os valores informados, incluindo
@@ -30,6 +48,24 @@ def altera_salarios(salarios):
     Salário mínimo para referência: R$ 724,00
     Retorna a lista com os salários alterados
     '''
+
+    def calculo(salario, sm):
+        if salario <= sm:
+            return salario + (20/100*salario)
+        elif salario > sm and salario <= 2*sm:
+            return salario + (15/100*salario)
+        elif salario > sm and salario <= 5*sm:
+            return salario + (10/100*salario) 
+        else:
+            return salario + (5/100*salario)
+
+    sm = 724.00
+    salarios_alterados = []
+
+    for salario in salarios:
+        salarios_alterados.append(round(calculo(salario, sm)))
+
+    return salarios_alterados
 
 # Área de testes: só mexa aqui se souber o que está fazendo!
 acertos = 0

@@ -6,10 +6,7 @@ def dormir(dia_semana, feriado):
     retorne True ou False conforme você vá dormir ou não
     """
 
-    if (feriado and not dia_semana):
-        return True
-    else:
-        return False
+    return feriado or not dia_semana
 
 def alunos_problema(a_sorri, b_sorri):
     """
@@ -19,6 +16,8 @@ def alunos_problema(a_sorri, b_sorri):
     retorne True quando houver problemas
     """
 
+    return (a_sorri and b_sorri) or (not a_sorri and not b_sorri)
+
 def soma_dobro(a, b):
     """
     dados dois números inteiros retorna sua soma
@@ -26,6 +25,11 @@ def soma_dobro(a, b):
     soma_dobro(1, 2) -> 3
     soma_dobro(2, 2) -> 8
     """
+
+    if a != b:
+        return a + b
+    else:
+        return 2*(a + b)
 
 def diff21(n):
     """
@@ -36,6 +40,11 @@ def diff21(n):
     dica: abs(x) retorna o valor absoluto de x
     """
 
+    if n > 21:
+        return 2 * abs(n-21)
+    else:
+        return abs(n-21)
+
 def papagaio(falando, hora):
     """
     temos um papagaio que fala alto
@@ -43,11 +52,15 @@ def papagaio(falando, hora):
     temos problemas se o papagaio estiver falando antes da 7 ou depois das 20
     """
 
+    return falando and (hora < 7 or hora > 20)
+
 def dez(a, b):
     """
     dados dois inteiros a e b
     retorna True se um dos dois é 10 ou a soma é 10
     """
+
+    return a == 10 or b == 10 or a + b == 10
 
 def dista10(n):
     """
@@ -59,6 +72,8 @@ def dista10(n):
     dista10(89) -> False
     """
 
+    return abs(n-100) <= 10 or abs(n-200) <= 10
+
 def apaga(s, n):
     """
     seja uma string s e um inteiro n
@@ -66,6 +81,8 @@ def apaga(s, n):
     apaga('kitten', 1) -> 'ktten'
     apaga('kitten', 4) -> 'kittn'
     """
+
+    return s[0:n] + s[n+1:]
 
 def troca(s):
     """
@@ -76,6 +93,11 @@ def troca(s):
     troca('a') -> 'a'
     troca('ab') -> 'ba'
     """
+
+    if len(s) <= 1:
+        return s
+    else:
+        return s[-1] + s[1:len(s)-1] + s[0]
 
 # Área de testes: só mexa aqui se souber o que está fazendo!
 acertos = 0
