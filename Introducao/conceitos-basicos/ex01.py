@@ -24,7 +24,7 @@ def donutsV2(count):
 # Caso a string `s` contenha menos que 2 caracteres,
 # retornar "" (string de cumprimento zero).
 def both_ends(s):
-    if len(s) <= 2:
+    if len(s) < 2:
         return ''
     else:
         return s[0:2] + s[-1:-3:-1][::-1]

@@ -35,7 +35,7 @@ def last(a):
   return a[-1]
 
 def sort_last(tuples):
-  pass
+  return sorted(tuples, key=last)
 
 class MyTest(unittest.TestCase):
   def test_match_ends(self):

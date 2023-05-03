@@ -3,7 +3,13 @@ import unittest
 
 def verbing(s):
     #SEU CODIGO AQUI
-    pass
+
+    if s == 'do':
+      return s
+    elif s[len(s)-3::] == 'ing':
+      return s + 'ly'
+    else:
+      return s + 'ing'
 
 
 # Dado um astring, procurar a primeira ocorrência da substring 'not' e 'bad'
@@ -11,11 +17,14 @@ def verbing(s):
 # substituir todo o trecho "not ... bad" por 'good'
 # Retorne a string resultante.
 def not_bad(s):
-    not_index = s.index('not')
-    bad_index = s.index('bad')
+    if ('not' in s) and ('bad' in s ):
+      index_not = s.index('not')
+      index_bad = s.index('bad') 
 
-    if bad_index < not_index:
-        return s.replace(s[not_index:bad_index], 'good')
+      if index_not < index_bad:
+        return s[0:index_not] + 'good' + s[index_bad+3::]
+    
+    return s
 
 # Considere dividir uma string em duas metades.
 # Se o comprimento for par, a parte da frente (front) e a parte de trás (back) são do mesmo tamanho.
@@ -24,13 +33,21 @@ def not_bad(s):
 # Dado 2 strings, 'a' e 'b', retornar um string na forma
 # a front + b front + a back + b back
 def front_back(a, b):
-    comprimento_a = len(a)//2
-    excedente_a = len(a)-(2*comprimento_a)
 
-    comprimento_b = len(b)//2
-    excedente_b = len(b)-(2*comprimento_b)
+  def organiza(s):
+    comprimento_metade = len(s)//2
+    indice_metade = comprimento_metade-1
 
-    return a[-1:-comprimento_a-excedente_a:-1] + b[-1:-comprimento_b-excedente_b:-1] + a[0:comprimento_a] + b[0:comprimento_b]
+    if 2*comprimento_metade == len(s):
+      return (s[0:indice_metade+1], s[indice_metade+1::])
+    else:
+      indice_metade+=1
+      return (s[0:indice_metade+1], s[indice_metade+1::])
+
+  a_processado = organiza(a)
+  b_processado = organiza(b)
+
+  return a_processado[0] + b_processado[0] + a_processado[1] + b_processado[1]
 
 
 class MyTest(unittest.TestCase):

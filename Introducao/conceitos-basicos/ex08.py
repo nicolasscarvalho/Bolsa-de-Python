@@ -35,9 +35,39 @@ def lista_de_primos(inicio,fim):
     '''Retorne uma lista de primos entre os valores informados, incluindo
     os limites'''
 
+    numeros_primos = []
+
+    for numero in range(inicio, fim+1):
+
+        if numero > 1:
+
+            divisores = 0
+
+            for divisor in range(1, numero + 1):
+
+                if numero%divisor == 0:
+                    divisores += 1
+
+            if divisores == 2 and numero not in numeros_primos:
+                numeros_primos.append(numero)
+
+    return numeros_primos
+
 def Fibonacci(n):
     ''' Retorne uma lista com os n primeiros valores da série de Fibonacci.
     Fibonacci = 1,1,2,3,5,8,13,...'''
+
+    sequencia = [1,1]
+
+    if n == 1:
+        return [1]
+    elif n == 2:
+        return [1,1]
+    else:
+        while len(sequencia) != n:
+            sequencia.append(sequencia[-1] + sequencia[-2])
+
+    return sequencia
 
 def altera_salarios(salarios):
     ''' Calcule o aumento de salário de acordo com a seguinte tabela:
@@ -54,7 +84,7 @@ def altera_salarios(salarios):
             return salario + (20/100*salario)
         elif salario > sm and salario <= 2*sm:
             return salario + (15/100*salario)
-        elif salario > sm and salario <= 5*sm:
+        elif salario > 2*sm and salario <= 5*sm:
             return salario + (10/100*salario) 
         else:
             return salario + (5/100*salario)
@@ -63,7 +93,7 @@ def altera_salarios(salarios):
     salarios_alterados = []
 
     for salario in salarios:
-        salarios_alterados.append(round(calculo(salario, sm)))
+        salarios_alterados.append(round(calculo(salario, sm), 2))
 
     return salarios_alterados
 

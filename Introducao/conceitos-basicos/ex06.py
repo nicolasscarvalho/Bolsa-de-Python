@@ -20,7 +20,7 @@ def troca_caixa(texto):
     vogais = 'aeiou'
     nova_str = ''
 
-    for letra in texto:
+    for letra in texto.lower():
         if letra in vogais:
             nova_str += letra.capitalize()
         else:
@@ -33,11 +33,11 @@ def imprime_mes_por_extenso(data):
     e imprima com o nome do mês por extenso
     '''
 
-    meses = {'1':'janeiro'  ,'2':'fevereiro',  '3':'março',  '4':'abril',  '5':'maio',  '6':'junho',  '7':'julho',  '8':'agosto',  '9':'setembro',  '10':'outubro',  '11':'novembro',  '12':'dezembro'}
+    meses = ['janeiro'  ,'fevereiro',  'março',  'abril',  'maio',  'junho',  'julho',  'agosto',  'setembro',  'outubro', 'novembro', 'dezembro']
     data_quebrada = data.split('/')
 
     if len(data_quebrada) == 3:
-        return f'{data_quebrada[0]} de {meses[str( data[1]) ]} de {data_quebrada[2]}'
+        return f'{data_quebrada[0]} de { meses[   int(data_quebrada[1])-1  ] } de {data_quebrada[2]}'
 
 def encontra_caracter(texto, caracter):
     '''Receba um texto e retorne a localização da primeira vez que 
@@ -113,7 +113,40 @@ def ponteironuloville(telefones):
         Resposta: 39 
     '''
 
+    def valida_num(num):
+
+        num_str = str(num)
+
+        if len(num_str) == 6:
+            soma = 0
+            consecutivos_iguais = False
+
+            for index, algarismo in enumerate(num_str):
+
+                soma += int(algarismo)
+
+                if index != len(num_str)-1:
+                    if algarismo == num_str[index+1]:
+                        consecutivos_iguais  = consecutivos_iguais or True
+
+            return num_str[0] != num_str[-1] and not consecutivos_iguais and soma%2 == 0
+        
+        
+        else:
+            return False
     
+
+
+    cont = 0
+
+    for telefone in telefones:
+        validacao = valida_num(telefone)
+        #print(validacao)
+        if validacao:
+            cont += 1
+
+    return cont
+
 
 # Área de testes: só mexa aqui se souber o que está fazendo!
 acertos = 0
@@ -187,7 +220,7 @@ def main():
         551595 575447 587393 600953 615233 633673 659902 678315
     '''.strip().split()
     test(ponteironuloville(telefones), 39)
-    telefones = open('telefones.txt').read().strip().split()
+    telefones = open('./telefones.txt').read().strip().split()
     test(ponteironuloville(telefones), 39)
 
 if __name__ == '__main__':
