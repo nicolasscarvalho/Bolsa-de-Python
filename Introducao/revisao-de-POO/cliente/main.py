@@ -1,8 +1,11 @@
 import socket
+import os
 
 class BaixadorArquivo():
 
     def __init__(self, ip: str = 'localhost', porta: int = 4000):
+        
+        super().__init__()
         self.ip = ip
         self.porta = porta
         self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -14,31 +17,40 @@ class BaixadorArquivo():
 
 
 
-    def baixa_arquivo(self, nome_arquivo: str, login: bool):
+    def upload_arquivo(self, nome_arquivo: str, login: bool):
 
 
         if login:
 
-            self.realiza_conexao()
-            self.cliente.send(nome_arquivo.encode())
+            if os.path.getsize(f'arquivos/{nome_arquivo}')*8 >= 250:
 
-            try:
-                with open (f'./arquivos/{nome_arquivo}', 'wb') as arquivo:
+                self.realiza_conexao()
 
-                    while True:
+                self.cliente.send(nome_arquivo.encode())
 
-                        recebido = self.cliente.recv(1024)
+                arquivo_lido = b''
 
-                        if not recebido or recebido == b'Arquivo menor que o esperado' or recebido == b'Arquivo nao encontrado no servidor':
-                            print(recebido.decode())
-                            break
-                        else:
-                            arquivo.write(recebido)
-                
-                print('Arquivo baixado com sucesso do servidor')
-            
-            except Exception as erro:
-                print('Falha ao baixar arquivo do servidor: ' + erro)
+                try:
+                    with open(f'./arquivos/{nome_arquivo}', 'r') as arquivo:
+                        for linha in arquivo.readlines():
+                            arquivo_lido += linha.encode()
+                    print(f'{nome_arquivo} lido com sucesso')
+                except:
+                    print(f'Falha ao ler {nome_arquivo}')
+
+
+                try:
+                    self.cliente.send(arquivo_lido)
+                    print(f'{nome_arquivo} enviado com sucesso')
+                except:
+                    print(f'Falha ao enviar {nome_arquivo}')
+
+            else:
+                print('Falha ao enviar arquivo: Arquivo menor que 250 Mb')
+
+        else:
+            print('Falha ao iniciar upload: login inválido')
+
 
 
 
@@ -102,10 +114,12 @@ class Cliente(BaixadorArquivo):
 
     
 
-joaozin: Cliente = Cliente(nome='Aurora Fabiana Letícia Silveira')
-
-joaozin.registrar()
-joaozin.baixa_arquivo(nome_arquivo='meu_arquivo', login=joaozin.logar())
+aurora: Cliente = Cliente(nome='Aurora Fabiana Letícia Silveira')
 
 
-print(joaozin.__str__())
+
+aurora.registrar()
+
+aurora.upload_arquivo(nome_arquivo='meu_arquivo.txt', login=aurora.logar())
+
+print(aurora.__str__())
