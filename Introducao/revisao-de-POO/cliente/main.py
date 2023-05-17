@@ -24,26 +24,36 @@ class BaixadorArquivo():
 
             if os.path.getsize(f'arquivos/{nome_arquivo}')*8 >= 250:
 
-                self.realiza_conexao()
-
-                self.cliente.send(nome_arquivo.encode())
-
-                arquivo_lido = b''
-
                 try:
-                    with open(f'./arquivos/{nome_arquivo}', 'r') as arquivo:
-                        for linha in arquivo.readlines():
-                            arquivo_lido += linha.encode()
-                    print(f'{nome_arquivo} lido com sucesso')
+                    self.realiza_conexao()
                 except:
-                    print(f'Falha ao ler {nome_arquivo}')
+                    print('Falha ao realizar conexão com o servidor')
+
 
 
                 try:
-                    self.cliente.send(arquivo_lido)
+                    self.cliente.send(nome_arquivo.encode())
+                except:
+                    print(f'Falha ao enviar o nome do arquivo "{nome_arquivo}" para o servidor')
+
+
+
+                try:
+                    with open(f'./arquivos/{nome_arquivo}', 'rb') as arquivo:
+
+                        for linha in arquivo.readlines():
+                            if linha:
+                                self.cliente.send(linha)
+                            else:
+                                break
+
+                    arquivo.close()
+
                     print(f'{nome_arquivo} enviado com sucesso')
                 except:
-                    print(f'Falha ao enviar {nome_arquivo}')
+                    print(f'Falha ao enviar {nome_arquivo} arquivo para o servidor')
+                
+
 
             else:
                 print('Falha ao enviar arquivo: Arquivo menor que 250 Mb')
@@ -119,7 +129,5 @@ aurora: Cliente = Cliente(nome='Aurora Fabiana Letícia Silveira')
 
 
 aurora.registrar()
-
-aurora.upload_arquivo(nome_arquivo='meu_arquivo.txt', login=aurora.logar())
-
+aurora.upload_arquivo(nome_arquivo='meu_arquivo.mp4', login=aurora.logar())
 print(aurora.__str__())
