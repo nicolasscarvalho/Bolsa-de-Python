@@ -3,7 +3,7 @@ import os
 
 class Servidor() :
 
-    def __init__(self, ip:str = 'localhost', porta:int = 4000):
+    def __init__(self, ip:str = 'localhost', porta:int = 3000):
 
         self.ip = ip
         self.porta = porta
@@ -11,34 +11,51 @@ class Servidor() :
         
 
 
-    def escutar(self, qt:int = 1):
-        self.servidor.bind(('localhost', 4000))
-        self.servidor.listen(qt)
+    def escutar(self, quantidade_clientes:int = 1):
+        try:
+            self.servidor.bind((self.ip, self.porta))
+            self.servidor.listen(quantidade_clientes)
+        except:
+            print('Falha ao ouvir clientes')
 
 
 
     def aceitar_conexao(self):
-        return self.servidor.accept()
+        try:
+            return self.servidor.accept()
+        except:
+            print('Falha ao aceitar conexão')
+            return (None, None)
 
 
 
     def receber_arquivo(self):
+
+        self.escutar()
         cliente_conexao, cliente_endereco = self.aceitar_conexao()
-        nome_arquivo = cliente_conexao.recv(1024)
+
+        try:
+            nome_arquivo = cliente_conexao.recv(1024)
+            print(f'Nome do arquivo recebido')
+        except:
+            print('Nome do arquivo não recebido')
 
 
-        with open(f'./arquivos/{nome_arquivo.decode()}', 'wb') as arquivo:
+        try:    
+            with open(f'./arquivos/{nome_arquivo.decode()}', 'wb') as arquivo:
+                
+                while True:
+                    dado_recebido = cliente_conexao.recv(4096)
 
-            while True:
-                dado_recebido = cliente_conexao.recv(10**6)
+                    if dado_recebido:
+                        arquivo.write(dado_recebido)
+                    else:
+                        break
 
-                print(dado_recebido)
-
-                if dado_recebido:
-                    arquivo.write(dado_recebido)
-                else:
-                    break
-
+            arquivo.close()
+            print('Download do arquivo feito com sucesso')
+        except:
+            print('Falha ao fazer download do arquivo')
 
 
     def finalizar_conexao(self):
@@ -46,6 +63,7 @@ class Servidor() :
 
 
 servidor: Servidor = Servidor()
+
 
 servidor.escutar()
 servidor.aceitar_conexao()
