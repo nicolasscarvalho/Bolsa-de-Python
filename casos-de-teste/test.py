@@ -24,7 +24,7 @@ class Test:
 
         
         # Setting temperature list and a
-        self._temperature = [0.0, 25.0, 5.0] # [-10.0, 25.0, 85.0]
+        self._temperature = [-10.0, 25.0, 85.0] #[0.0, 25.0, -5.0]
 
     def _fm(self):
         
@@ -44,7 +44,7 @@ class Test:
             
 
             # Setting voltage C
-            self._voltage_C = 0
+            self._voltage_C = 120.0
 
 
             # Setting electronic charge
@@ -69,7 +69,7 @@ class Test:
             self._voltage_X = 20.0
 
 
-            self.eload.write(f'VOLT {self._voltage_C}')
+            self.eload.write(f'VOLT {self._voltage_X}')
 
             self._fm_state = 'CONFIG_EQUITY'
 
@@ -89,7 +89,6 @@ class Test:
 
 
         elif self._fm_state == 'CONFIG_PSU':
-
             self.psu.set_voltage(self._voltage_X)
             sleep(1)
 
@@ -111,10 +110,13 @@ class Test:
             print(f'PSU Actual electric current: {self.psu.get_current()}')
             print(f'PSU Actual electric voltage: {self.psu.get_voltage()}')
 
-            print(f'ELOAD Actual electric voltage: {self._output_power}')
+            print(f'ELOAD Actual output power: {self._output_power}')
+
+            
 
             if self._output_power >= self._voltage_X:
                 self._fm_state = 'END'
+                
             else:
                 self._fm_state = 'CONFIG_ELOAD'
 
@@ -124,6 +126,7 @@ class Test:
             self._temperature_step += 1
             if self._temperature_step < len(self._temperature):
                 self._current_temperature = self._temperature[self._temperature_step]
+                self._fm_state = 'START'
             else:
                 self._fm_state = 'END'
 
