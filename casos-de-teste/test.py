@@ -11,24 +11,25 @@ class Test:
         self._fm_sleep_time = 0.1
         self._temperature_step = 0
 
+        # Importing modules
+        self.psu = PSU()
+        self.equity = Equity()
+        self.eload = Eload()
+
+
+        # Setting functions
+        self._config_eload()
+        self._config_equity()
+        self._config_psu()
+
+        
+        # Setting temperature list and a
+        self._temperature = [0.0, 25.0, 5.0] # [-10.0, 25.0, 85.0]
+
     def _fm(self):
         
         if self._fm_state == 'START':
             
-            # Importing modules
-            self.psu = PSU()
-            self.equity = Equity()
-            self.eload = Eload()
-
-
-            # Setting functions
-            self._config_eload()
-            self._config_equity()
-            self._config_psu()
-
-            
-            # Setting temperature list and a
-            self._temperature = [-10.0, 25.0, 85.0]
             self._current_temperature = self._temperature[self._temperature_step]
 
             if not 0 <= self._current_temperature <= 60:
@@ -43,7 +44,7 @@ class Test:
             
 
             # Setting voltage C
-            self._voltage_C = [0.0] 
+            self._voltage_C = 0
 
 
             # Setting electronic charge
@@ -65,10 +66,10 @@ class Test:
             
 
             # Setting voltage X
-            self._voltage_X = 120.0
+            self._voltage_X = 20.0
 
 
-            self.eload.write(f'VOLT f{self._voltage_C}')
+            self.eload.write(f'VOLT {self._voltage_C}')
 
             self._fm_state = 'CONFIG_EQUITY'
 
@@ -88,7 +89,6 @@ class Test:
 
 
         elif self._fm_state == 'CONFIG_PSU':
-            self._fm_state = 'CONFIG_ELECTRONIC_CHARGE'
 
             self.psu.set_voltage(self._voltage_X)
             sleep(1)
@@ -105,18 +105,20 @@ class Test:
         elif self._fm_state == 'SHOW_OUTPUT':
             self._output_power = float(self.eload.query("MEAS:POW?"))
 
-            print(f'ELOAD Actual electric current: f{self.eload.query("MEAS:CURR?")}')
-            print(f'ELOAD Actual electric voltage: f{self.eload.query("MEAS:VOLT?")}')
+            print(f'ELOAD Actual electric current: {self.eload.query("MEAS:CURR?")}')
+            print(f'ELOAD Actual electric voltage: {self.eload.query("MEAS:VOLT?")}')
 
-            print(f'PSU Actual electric current: f{self.psu.get_current()}')
-            print(f'PSU Actual electric voltage: f{self.psu.get_voltage()}')
+            print(f'PSU Actual electric current: {self.psu.get_current()}')
+            print(f'PSU Actual electric voltage: {self.psu.get_voltage()}')
 
-            print(f'ELOAD Actual electric voltage: f{self.output_power}')
+            print(f'ELOAD Actual electric voltage: {self._output_power}')
 
             if self._output_power >= self._voltage_X:
                 self._fm_state = 'END'
             else:
                 self._fm_state = 'CONFIG_ELOAD'
+
+            self._fm_state = 'VERIFY_TEMPERATURE_STEP'
 
         elif self._fm_state == 'VERIFY_TEMPERATURE_STEP':
             self._temperature_step += 1
